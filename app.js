@@ -95,6 +95,7 @@ class circle extends component {
                     if (dist(darkC.x,darkC.y,lightC.x,lightC.y) > 2*this.width)
                         board.squareM[sy / 50][sx / 50].color = (this.color === dark ? light : dark);
                     this.vx = vx; this.vy = vy;
+                    break;
                 }
             }
     }
