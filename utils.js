@@ -5,6 +5,11 @@ export function borderCheck(x, y, r, width, height) {
     return [vx, vy];
 }
 
+export function dist(x1, y1, x2, y2) {
+  let x = x1- x2, y = y1- y2;
+  return Math.sqrt(x*x + y*y);
+}
+
 export function circleRect(cx, cy, radius, rx, ry, rw, rh, vx, vy) {
     // temporary variables to set edges for testing
     let testX = cx;

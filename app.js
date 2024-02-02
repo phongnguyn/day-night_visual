@@ -1,4 +1,4 @@
-import { borderCheck, circleRect } from "./utils.js";
+import { borderCheck, circleRect, dist } from "./utils.js";
 
 let daycnt = document.querySelector('.day');
 let nightcount = document.querySelector('.night');
@@ -92,7 +92,8 @@ class circle extends component {
                 sx -= (sx % 50);sy -= (sy % 50);
                 let [vx, vy, hit] = circleRect(this.x + this.r, this.y + this.r, this.r, sx, sy, 50, 50, this.vx, this.vy);
                 if (hit && board.squareM[sy / 50][sx / 50].color === this.color) {
-                    board.squareM[sy / 50][sx / 50].color = (this.color === dark ? light : dark);
+                    if (dist(darkC.x,darkC.y,lightC.x,lightC.y) > 2*this.width)
+                        board.squareM[sy / 50][sx / 50].color = (this.color === dark ? light : dark);
                     this.vx = vx; this.vy = vy;
                 }
             }
