@@ -77,6 +77,7 @@ class circle extends component {
     r = this.width / 2;
     vx = (Math.random() + 3) * (Math.random() > 0.5 ? 1 : -1);
     vy = (Math.random() + 3) * (Math.random() > 0.5 ? 1 : -1);
+    speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
     checkCollision() {
         let [mx, my] = borderCheck(this.x,this.y,this.r,500,500);
         if (mx + my < 2) {
@@ -89,11 +90,10 @@ class circle extends component {
                 let sx = this.x + this.r + i * 25, sy = this.y + this.r + j * 25;
                 if (sx < 0 || sx > 500 || sy < 0 || sy > 500) continue;
                 sx -= (sx % 50);sy -= (sy % 50);
-                let [mx, my, hit] = circleRect(this.x + this.r, this.y + this.r, this.r, sx, sy, 50, 50);
+                let [vx, vy, hit] = circleRect(this.x + this.r, this.y + this.r, this.r, sx, sy, 50, 50, this.vx, this.vy);
                 if (hit && board.squareM[sy / 50][sx / 50].color === this.color) {
                     board.squareM[sy / 50][sx / 50].color = (this.color === dark ? light : dark);
-                    this.vx *= mx;
-                    this.vy *= my;
+                    this.vx = vx; this.vy = vy;
                 }
             }
     }

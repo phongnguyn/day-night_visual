@@ -5,17 +5,16 @@ export function borderCheck(x, y, r, width, height) {
     return [vx, vy];
 }
 
-export function circleRect(cx, cy, radius, rx, ry, rw, rh) {
-    let vx=1,vy=1;
+export function circleRect(cx, cy, radius, rx, ry, rw, rh, vx, vy) {
     // temporary variables to set edges for testing
     let testX = cx;
     let testY = cy;
   
     // which edge is closest?
-    if (cx < rx)         {testX = rx; vx = -1;}      // test left edge
-    else if (cx > rx+rw) {testX = rx+rw; vx = -1;}   // right edge
-    if (cy < ry)         {testY = ry; vy = -1;}     // top edge
-    else if (cy > ry+rh) {testY = ry+rh; vy =-1;}   // bottom edge
+    if (cx < rx)         {testX = rx;}      // test left edge
+    else if (cx > rx+rw) {testX = rx+rw;}   // right edge
+    if (cy < ry)         {testY = ry;}     // top edge
+    else if (cy > ry+rh) {testY = ry+rh;}   // bottom edge
   
     // get distance from closest edges
     let distX = cx-testX;
@@ -23,8 +22,12 @@ export function circleRect(cx, cy, radius, rx, ry, rw, rh) {
     let distance = Math.sqrt( (distX*distX) + (distY*distY) );
   
     // if the distance is less than the radius, collision!
-    if (distance <= radius) {
-      return [vx,vy, true];
+    if (distance > radius) {
+      return [vx,vy, false];
     }
-    return [vx,vy, false];
+    if (distance === 0) return [vx * -1,vy * -1, true];
+    let c = 2 * (vx * distX + vy * distY) / ((distX*distX) + (distY*distY));
+    vx = vx - c * distX;
+    vy = vy - c * distY;
+    return [vx,vy, true];
 }
