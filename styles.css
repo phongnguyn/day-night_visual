@@ -17,6 +17,7 @@ body {
 .text_box {
     text-align: center;
     font-size: 1.5rem;
+    color: aliceblue;
 }
 
 .canvas {
