@@ -4,17 +4,19 @@ let daycnt = document.querySelector('.day');
 let nightcount = document.querySelector('.night');
 const dark = '#555555';
 const light = '#eeeedd';
+const objectWidth = 25;
+const canvasWidth = 500;
 
-daycnt.innerHTML = 50;
-nightcount.innerHTML = 50;
+daycnt.innerHTML = objectWidth;
+nightcount.innerHTML = objectWidth;
 
 var darkC, lightC, board;
 
 function startGame() {
     myGameArea.start();
-    board = new Board(10,10);
-    darkC = new circle(50, 50, dark, 10, 400);
-    lightC = new circle(50, 50, light, 400, 120);
+    board = new Board(20,20);
+    darkC = new circle(objectWidth, objectWidth, dark, 10, 400);
+    lightC = new circle(objectWidth, objectWidth, light, 400, 120);
 }
 
 var myGameArea = {
@@ -51,8 +53,8 @@ class Board {
             this.squareM[i] = []
             for (let j = 0; j < this.width; j ++)
                 if (j < this.width / 2) 
-                    this.squareM[i][j] = new component(50, 50, light, j * 50, i * 50);
-                else this.squareM[i][j] = new component(50, 50, dark, j * 50, i * 50);
+                    this.squareM[i][j] = new component(objectWidth, objectWidth, light, j * objectWidth, i * objectWidth);
+                else this.squareM[i][j] = new component(objectWidth, objectWidth, dark, j * objectWidth, i * objectWidth);
         }
     }
     constructor(width, height) {
@@ -69,17 +71,17 @@ class Board {
                 if (this.squareM[i][j].color === light) dcnt ++;
             }
         daycnt.innerHTML = dcnt;
-        nightcount.innerHTML = 100 - dcnt;
+        nightcount.innerHTML = (canvasWidth/objectWidth)**2 - dcnt;
     }
 }
 
 class circle extends component {
     r = this.width / 2;
-    vx = (Math.random() + 3) * (Math.random() > 0.5 ? 1 : -1);
-    vy = (Math.random() + 3) * (Math.random() > 0.5 ? 1 : -1);
+    vx = (Math.random() + 5) * (Math.random() > 0.5 ? 1 : -1);
+    vy = (Math.random() + 5) * (Math.random() > 0.5 ? 1 : -1);
     speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
     checkCollision() {
-        let [mx, my] = borderCheck(this.x,this.y,this.r,500,500);
+        let [mx, my] = borderCheck(this.x,this.y,this.r,canvasWidth,canvasWidth);
         if (mx + my < 2) {
             this.vx *= mx;
             this.vy *= my;
@@ -87,13 +89,13 @@ class circle extends component {
         }
         for (let i = -1; i <= 1; i++ )
             for (let j = -1; j <= 1; j ++) {
-                let sx = this.x + this.r + i * 25, sy = this.y + this.r + j * 25;
-                if (sx < 0 || sx > 500 || sy < 0 || sy > 500) continue;
-                sx -= (sx % 50);sy -= (sy % 50);
-                let [vx, vy, hit] = circleRect(this.x + this.r, this.y + this.r, this.r, sx, sy, 50, 50, this.vx, this.vy);
-                if (hit && board.squareM[sy / 50][sx / 50].color === this.color) {
+                let sx = this.x + this.r + i * objectWidth, sy = this.y + this.r + j * objectWidth;
+                if (sx < 0 || sx >canvasWidth || sy < 0 || sy >canvasWidth) continue;
+                sx -= (sx % objectWidth);sy -= (sy % objectWidth);
+                let [vx, vy, hit] = circleRect(this.x + this.r, this.y + this.r, this.r, sx, sy, objectWidth, objectWidth, this.vx, this.vy);
+                if (hit && board.squareM[sy / objectWidth][sx / objectWidth].color === this.color) {
                     if (dist(darkC.x,darkC.y,lightC.x,lightC.y) > 2*this.width)
-                        board.squareM[sy / 50][sx / 50].color = (this.color === dark ? light : dark);
+                        board.squareM[sy / objectWidth][sx / objectWidth].color = (this.color === dark ? light : dark);
                     this.vx = vx; this.vy = vy;
                     break;
                 }
